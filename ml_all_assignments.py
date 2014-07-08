@@ -156,8 +156,6 @@ def nnCostFunction(nn_params, input_layer_size, hidden_layer_size, num_labels, X
 
     J = J * (-1 / m)
 
-    # Right till here
-
     t1r = t1[:, 1:]
     t2r = t2[:, 1:]
 
@@ -237,11 +235,7 @@ def predict(t1, t2, X):
     return p
 
 
-def callbackFunc(theta):
-    (gg, jj) = nnCostFunction(theta, args[0], args[1], args[2], args[3], args[4], args[5])
-    print jj
-
-def testNeuralNetwork(outputCost = False):
+def testNeuralNetwork():
     import scipy.io as sio
     from scipy.optimize import minimize
 
