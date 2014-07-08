@@ -6,7 +6,6 @@ from __future__ import division
 import numpy as np
 import math
 
-
 # Helper function
 def sigmoid(val):
 
@@ -238,7 +237,11 @@ def predict(t1, t2, X):
     return p
 
 
-def testNeuralNetwork():
+def callbackFunc(theta):
+    (gg, jj) = nnCostFunction(theta, args[0], args[1], args[2], args[3], args[4], args[5])
+    print jj
+
+def testNeuralNetwork(outputCost = False):
     import scipy.io as sio
     from scipy.optimize import minimize
 
@@ -246,6 +249,8 @@ def testNeuralNetwork():
     d = sio.loadmat('ex4data1.mat')
     X = d['X']
     y = d['y']
+
+    # Adding bias values
     X = np.insert(arr=X, obj=0, values=1, axis=1)
 
     args = (400, 25, 10, X, y, 1)
@@ -257,7 +262,12 @@ def testNeuralNetwork():
 
     print 'Done reading in data, now training Neural Network...'
 
-    res2 = minimize(funCostNeuralNetwork, i_nn_params, args=args, method='CG', jac=funGradNeuralNetwork, options={'maxiter': 50})
+    def callbackFunc2(theta):
+        (gg, jj) = nnCostFunction(theta, args[0], args[1], args[2], args[3], args[4], args[5])
+        print 'Current cost: %f' % jj
+
+    res2 = minimize(funCostNeuralNetwork, i_nn_params, args=args, method='CG',
+                    jac=funGradNeuralNetwork, options={'maxiter': 50}, callback=callbackFunc2)
 
     optT1 = res2['x'][0:(25 * (400 + 1))]
     optT1 = optT1.reshape((25, (400 + 1)), order='F')
